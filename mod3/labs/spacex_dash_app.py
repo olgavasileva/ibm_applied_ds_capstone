@@ -99,13 +99,22 @@ def update_scatter_plot(entered_site, payload_range):
     else:
         df = filtered_df[filtered_df['Launch Site'] == entered_site]
 
+    df["class"] = df["class"].astype(str)
 
-    fig = px.scatter(df, x='Payload Mass (kg)', y='class', color='class',
-                     labels={'class': 'Launch Success (0 = Failure, 1 = Success)'},
-                     title=f'Payload vs. Launch Outcome for {entered_site}')
+    fig = px.scatter(
+        df, 
+        x='Payload Mass (kg)', 
+        y='class', 
+        color='class',
+        color_discrete_sequence=['red', 'blue'],  # Map 0 to red and 1 to blue
+        labels={'class': 'Launch Success'},
+        title=f'Payload vs. Launch Outcome for {entered_site}'
+    )
+    # Update y-axis to show only ticks at 0 and 1
+    fig.update_yaxes(tickvals=[0, 1], ticktext=["Failure", "Success"], autorange="reversed")
+    fig.update_layout(showlegend=False)
     
     return fig
-
 
 # Run the app
 if __name__ == '__main__':
